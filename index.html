@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tres en Raya Familiar</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101827;color:white;font-family:Arial,sans-serif;text-align:center}
+main{max-width:460px;margin:auto;padding:24px 16px}
+h1{color:#fbbf24}
+input,button{font-size:17px;padding:13px;border-radius:10px;border:0}
+input{width:100%;margin:7px 0;background:white;color:#111}
+button{background:#fbbf24;color:#111;font-weight:bold;cursor:pointer;margin:10px}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:25px auto;max-width:350px}
+.cell{aspect-ratio:1;background:#26364f;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:55px;font-weight:bold;cursor:pointer}
+.cell.x{color:#60a5fa}.cell.o{color:#fb7185}
+#status{font-size:21px;min-height:55px}
+small{color:#cbd5e1}
+</style>
+</head>
+<body>
+<main>
+<h1>🎮 Tres en Raya Familiar</h1>
+<p>¡Juega con familiares y amigos!</p>
+<input id="p1" maxlength="20" placeholder="Nombre del jugador X">
+<input id="p2" maxlength="20" placeholder="Nombre del jugador O">
+<button onclick="restart()">Comenzar / Reiniciar</button>
+<h2 id="status"></h2>
+<div id="board" class="board"></div>
+<small>Primera versión: dos jugadores en el mismo dispositivo.</small>
+</main>
+<script>
+let cells=Array(9).fill("");
+let turn="X",finished=false;
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+const board=document.getElementById("board");
+const status=document.getElementById("status");
+function player(t){
+return document.getElementById(t==="X"?"p1":"p2").value.trim()||"Jugador "+t;
+}
+function render(){
+board.innerHTML="";
+cells.forEach((v,i)=>{
+const el=document.createElement("div");
+el.className="cell "+v.toLowerCase();
+el.textContent=v;
+el.addEventListener("click",()=>play(i));
+board.appendChild(el);
+});
+}
+function play(i){
+if(finished||cells[i])return;
+cells[i]=turn;
+render();
+if(wins.some(line=>line.every(n=>cells[n]===turn))){
+status.textContent="🏆 ¡Ganó "+player(turn)+"!";
+finished=true;return;
+}
+if(cells.every(Boolean)){
+status.textContent="🤝 ¡Empate!";
+finished=true;return;
+}
+turn=turn==="X"?"O":"X";
+status.textContent="Turno de "+player(turn)+" ("+turn+")";
+}
+function restart(){
+cells=Array(9).fill("");
+turn="X";finished=false;
+status.textContent="Turno de "+player(turn)+" (X)";
+render();
+}
+restart();
+</script>
+</body>
+</html>
