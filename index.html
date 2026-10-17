@@ -15,6 +15,30 @@
 .cell:disabled,.cell:disabled .avatar,.cell:disabled .avatar img{opacity:1!important;filter:none!important;-webkit-filter:none!important;mix-blend-mode:normal!important}
 .cell .avatar img{display:block;object-fit:cover;image-rendering:auto}
 @keyframes happyBounce{to{transform:translateY(-6px) scale(1.05)}}@keyframes angryShake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}@keyframes winGlow{to{box-shadow:inset 0 0 28px #ffde43,0 0 24px #ffdd4a}}@keyframes fall{to{top:110vh;transform:translateX(70px) rotate(900deg)}}
+
+/* Pantalla de juego compacta: mensajes visibles encima del tablero */
+#game .chat-compose{margin:6px 0 10px;padding:9px 10px}
+#game .chat-compose label{margin-bottom:5px}
+#game .chat-input-row{align-items:center}
+#game .chat-input-row input{margin:0;padding:10px;font-size:16px}
+#game .chat-input-row button{padding:11px 12px;white-space:nowrap}
+@media(max-width:600px){
+ #game{padding:10px 12px;margin:8px 0}
+ #game .players .avatar{width:54px;height:54px}
+ #game .player{gap:2px}
+ #game .player strong{font-size:13px}
+ #game .score{font-size:19px;padding:2px 14px}
+ #game .draws{padding:4px;font-size:11px}
+ #game .draws b{font-size:18px}
+ #game .status{font-size:16px;margin:7px 0}
+ #game .board{width:min(100%,calc(100dvh - 305px));min-width:0;margin:0 auto;gap:5px;padding:5px;border-radius:15px}
+ #game .cell{border-radius:10px;padding:3px}
+ #game .chat-note{display:none}
+ #game .toolbar{margin-top:8px;gap:6px}
+ #game .toolbar button{padding:9px 8px;font-size:13px}
+ #game .speech{bottom:calc(100% + 4px);font-size:12px;padding:6px 8px}
+}
+@media(max-height:650px) and (max-width:600px){#game .board{width:min(100%,calc(100dvh - 275px))}#game .players .avatar{width:45px;height:45px}}
 </style>
 </head><body><main class="app">
 <h1>🎮 Tres en Raya<br><b>Familiar</b></h1><p class="sub">¡Juega con tu familia, estés donde estés!</p>
@@ -25,8 +49,8 @@
 <div id="aiOptions" class="hidden"><label for="difficulty">Dificultad de la máquina</label><select id="difficulty"><option value="1">Nivel 1 · Muy fácil (niños)</option><option value="2">Nivel 2 · Fácil</option><option value="3">Nivel 3 · Intermedio</option><option value="4">Nivel 4 · Difícil</option><option value="5">Nivel 5 · Experto (imbatible)</option></select><label for="aiName">Nombre del rival</label><input id="aiName" value="Máquina" maxlength="22"><label for="aiPhoto">Foto del rival (opcional)</label><input id="aiPhoto" type="file" accept="image/*"><button id="startAI">Empezar contra la máquina</button></div>
 <div id="localOptions" class="hidden"><label for="p2Name">Nombre del segundo jugador</label><input id="p2Name" placeholder="Nombre del jugador 2" maxlength="22"><label for="p2Photo">Foto del segundo jugador</label><input id="p2Photo" type="file" accept="image/*"><button id="startLocal">Empezar partida</button></div>
 <div id="onlineOptions" class="hidden"><p class="help">Comparte el código con un familiar para jugar desde otro teléfono. Ambos deben abrir este mismo sitio web.</p><button id="createRoom">Crear sala online</button><div class="row" style="margin-top:15px"><input id="joinCode" placeholder="Código de sala" maxlength="6" autocapitalize="characters"><button id="joinRoom">Unirme</button></div><div id="roomInfo" class="hidden"><p class="help">Código de tu sala:</p><div class="room-code" id="roomCode"></div><button id="copyRoom" class="secondary">Copiar invitación</button></div><p id="onlineMessage" class="notice" aria-live="polite"></p></div></section>
-<section id="game" class="panel hidden"><div class="players"><div class="player"><div id="bubble0" class="speech hidden" role="status" aria-live="polite"></div><div id="avatar1" class="avatar">🙂</div><strong id="name1">Jugador 1</strong><div id="score1" class="score">0</div></div><div class="draws">Empates<b id="drawCount">0</b></div><div class="player"><div id="bubble1" class="speech hidden" role="status" aria-live="polite"></div><div id="avatar2" class="avatar red">🤖</div><strong id="name2">Jugador 2</strong><div id="score2" class="score">0</div></div></div><div id="turnStatus" class="status" aria-live="polite">Tu turno</div><div id="board" class="board" aria-label="Tablero de tres en raya"></div><div id="onlineChat" class="chat-compose hidden"><label for="chatText">💬 Habla con tu rival</label><div class="chat-input-row"><input id="chatText" type="text" maxlength="100" placeholder="Escribe algo corto… 😊" autocomplete="off"><button id="sendChat" type="button">Enviar ➤</button></div><p class="chat-note">El mensaje aparecerá sobre tu foto durante 5 segundos y desaparecerá. Sin historial.</p><p id="chatError" class="notice error hidden" role="alert"></p></div><div class="toolbar"><button id="nextRound">🔄 Nueva ronda</button><button id="leaveGame" class="danger">Salir de la partida</button></div></section>
-<p class="help" style="text-align:center">Versión conexión online revisada 17-10-G · Las fotos se guardan en este teléfono. En partidas online, se comparte una versión reducida de la foto con el otro jugador.</p>
+<section id="game" class="panel hidden"><div class="players"><div class="player"><div id="bubble0" class="speech hidden" role="status" aria-live="polite"></div><div id="avatar1" class="avatar">🙂</div><strong id="name1">Jugador 1</strong><div id="score1" class="score">0</div></div><div class="draws">Empates<b id="drawCount">0</b></div><div class="player"><div id="bubble1" class="speech hidden" role="status" aria-live="polite"></div><div id="avatar2" class="avatar red">🤖</div><strong id="name2">Jugador 2</strong><div id="score2" class="score">0</div></div></div><div id="turnStatus" class="status" aria-live="polite">Tu turno</div><div id="onlineChat" class="chat-compose hidden"><label for="chatText">💬 Habla con tu rival</label><div class="chat-input-row"><input id="chatText" type="text" maxlength="100" placeholder="Escribe algo corto… 😊" autocomplete="off"><button id="sendChat" type="button">Enviar ➤</button></div><p class="chat-note">El mensaje aparecerá sobre tu foto durante 5 segundos y desaparecerá. Sin historial.</p><p id="chatError" class="notice error hidden" role="alert"></p></div><div id="board" class="board" aria-label="Tablero de tres en raya"></div><div class="toolbar"><button id="nextRound">🔄 Nueva ronda</button><button id="leaveGame" class="danger">Salir de la partida</button></div></section>
+<p class="help" style="text-align:center">Versión conexión online revisada 17-10-H · Las fotos se guardan en este teléfono. En partidas online, se comparte una versión reducida de la foto con el otro jugador.</p>
 </main>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
