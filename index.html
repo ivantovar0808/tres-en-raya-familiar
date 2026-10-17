@@ -1,76 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tres en Raya Familiar</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#101827;color:white;font-family:Arial,sans-serif;text-align:center}
-main{max-width:460px;margin:auto;padding:24px 16px}
-h1{color:#fbbf24}
-input,button{font-size:17px;padding:13px;border-radius:10px;border:0}
-input{width:100%;margin:7px 0;background:white;color:#111}
-button{background:#fbbf24;color:#111;font-weight:bold;cursor:pointer;margin:10px}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:25px auto;max-width:350px}
-.cell{aspect-ratio:1;background:#26364f;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:55px;font-weight:bold;cursor:pointer}
-.cell.x{color:#60a5fa}.cell.o{color:#fb7185}
-#status{font-size:21px;min-height:55px}
-small{color:#cbd5e1}
-</style>
-</head>
-<body>
-<main>
-<h1>🎮 Tres en Raya Familiar</h1>
-<p>¡Juega con familiares y amigos!</p>
-<input id="p1" maxlength="20" placeholder="Nombre del jugador X">
-<input id="p2" maxlength="20" placeholder="Nombre del jugador O">
-<button onclick="restart()">Comenzar / Reiniciar</button>
-<h2 id="status"></h2>
-<div id="board" class="board"></div>
-<small>Primera versión: dos jugadores en el mismo dispositivo.</small>
-</main>
-<script>
-let cells=Array(9).fill("");
-let turn="X",finished=false;
-const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-const board=document.getElementById("board");
-const status=document.getElementById("status");
-function player(t){
-return document.getElementById(t==="X"?"p1":"p2").value.trim()||"Jugador "+t;
-}
-function render(){
-board.innerHTML="";
-cells.forEach((v,i)=>{
-const el=document.createElement("div");
-el.className="cell "+v.toLowerCase();
-el.textContent=v;
-el.addEventListener("click",()=>play(i));
-board.appendChild(el);
-});
-}
-function play(i){
-if(finished||cells[i])return;
-cells[i]=turn;
-render();
-if(wins.some(line=>line.every(n=>cells[n]===turn))){
-status.textContent="🏆 ¡Ganó "+player(turn)+"!";
-finished=true;return;
-}
-if(cells.every(Boolean)){
-status.textContent="🤝 ¡Empate!";
-finished=true;return;
-}
-turn=turn==="X"?"O":"X";
-status.textContent="Turno de "+player(turn)+" ("+turn+")";
-}
-function restart(){
-cells=Array(9).fill("");
-turn="X";finished=false;
-status.textContent="Turno de "+player(turn)+" (X)";
-render();
-}
-restart();
-</script>
-</body>
-</html>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tres en Raya Familiar</title><style>*{box-sizing:border-box}body{margin:0;background:#101827;color:#fff;font-family:system-ui,Arial}main{max-width:520px;margin:auto;padding:20px}h1{color:#ffbf24;text-align:center}h2{font-size:21px}section{background:#1c2940;border-radius:18px;padding:18px;margin:16px 0}input,button{font:inherit;border-radius:10px;padding:12px;border:0}input{width:100%;margin:7px 0;background:#fff;color:#111}button{background:#ffbf24;color:#101827;font-weight:700;margin:5px;cursor:pointer}button:disabled{opacity:.4}.muted{color:#c4d1e4}.avatar{width:70px;height:70px;object-fit:cover;border-radius:50%;background:#31425c}.profile{display:flex;align-items:center;gap:14px}.board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:20px auto;max-width:400px}.cell{aspect-ratio:1;background:#293a55;border-radius:13px;display:grid;place-items:center;font-size:clamp(48px,15vw,80px);font-weight:800;color:#60a5fa;cursor:pointer}.cell.o{color:#fb7185}.cell:focus-visible{outline:3px solid #ffbf24}.hidden{display:none!important}.notice{background:#293a55;padding:12px;border-radius:10px;overflow-wrap:anywhere}small{color:#d0d9e6}#invite{width:100%}#photo{font-size:14px}#score{font-weight:bold}a{color:#ffbf24}</style></head><body><main><h1>🎮 Tres en Raya Familiar</h1><p style="text-align:center">¡Juega con tu familia, estés donde estés!</p><section><h2>Tu perfil</h2><div class="profile"><img id="avatar" class="avatar" alt="Tu fotografía"><div style="flex:1"><input id="name" maxlength="30" placeholder="Tu nombre"><label for="photo"><small>Selecciona tu foto (se guarda en este dispositivo)</small></label><input type="file" id="photo" accept="image/*"></div></div><button id="save">Guardar perfil</button><div id="profileStatus" class="muted"></div></section><section><h2>Elige cómo jugar</h2><button id="local">Dos en este teléfono</button><button id="create">Crear sala online</button><p class="muted">O introduce el código que te envió un familiar:</p><input id="roomInput" placeholder="Código de sala" maxlength="8" autocapitalize="characters"><button id="join">Unirme a sala</button><div id="roomInfo" class="notice hidden"><p id="roomText"></p><button id="share">Compartir invitación</button><input id="invite" readonly aria-label="Enlace de invitación"></div></section><section><div id="players" class="profile"></div><h2 id="status" aria-live="polite">Elige un modo para empezar</h2><p id="score"></p><div id="board" class="board" role="group" aria-label="Tablero de tres en raya"></div><button id="again" disabled>Nueva ronda</button><button id="leave">Salir de la partida</button></section><p class="muted" id="connection">Conectando con Firebase…</p></main><script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
+import {getAuth,signInAnonymously,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+import {getDatabase,ref,onValue,runTransaction,get,set,off} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js';
+const firebaseConfig={apiKey:'AIzaSyCKUhsATwbfHjWDsX76N0Lla5lTBWyfodc',authDomain:'tres-en-raya-familiar.firebaseapp.com',databaseURL:'https://tres-en-raya-familiar-default-rtdb.europe-west1.firebasedatabase.app',projectId:'tres-en-raya-familiar',storageBucket:'tres-en-raya-familiar.firebasestorage.app',messagingSenderId:'410782127393',appId:'1:410782127393:web:e964cc5e26e4f4d6255a60'};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),$=id=>document.getElementById(id);let uid=null,mode=null,roomId=null,roomRef=null,unsubscribe=null,game=null,localGame=null,profile={name:'',photo:''};
+try{profile=JSON.parse(localStorage.getItem('tresPerfil'))||profile}catch{}$('name').value=profile.name||'';if(profile.photo)$('avatar').src=profile.photo;
+$('photo').onchange=()=>{const file=$('photo').files[0];if(!file)return;if(file.size>5e6){alert('Elige una foto de menos de 5 MB');return}const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const c=document.createElement('canvas'),s=Math.min(1,220/Math.max(img.width,img.height));c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);profile.photo=c.toDataURL('image/jpeg',.72);$('avatar').src=profile.photo;URL.revokeObjectURL(url)};img.src=url};
+$('save').onclick=()=>{profile.name=$('name').value.trim().slice(0,30);if(!profile.name){alert('Escribe tu nombre');return}localStorage.setItem('tresPerfil',JSON.stringify(profile));$('profileStatus').textContent='Perfil guardado';if(mode==='online'&&roomRef&&uid)runTransaction(roomRef,r=>{if(!r)return;if(r.x?.uid===uid)r.x.name=profile.name;if(r.o?.uid===uid)r.o.name=profile.name;return r}).catch(console.error)};
+function myName(){return $('name').value.trim().slice(0,30)||profile.name||'Jugador'}
+function winner(b){const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];for(const [a,c,d] of lines)if(b[a]&&b[a]===b[c]&&b[a]===b[d])return b[a];return b.every(Boolean)?'draw':null}
+function newState(x,o){return {board:['','','','','','','','',''],turn:'X',result:'',round:1,scores:{X:0,O:0,draw:0},x,o}}
+function render(){const g=mode==='local'?localGame:game,b=g?.board||Array(9).fill('');$('board').replaceChildren();b.forEach((v,i)=>{const el=document.createElement('button');el.className='cell'+(v==='O'?' o':'');el.textContent=v;el.setAttribute('aria-label',`Casilla ${i+1}: ${v||'vacía'}`);el.onclick=()=>move(i);$('board').append(el)});if(!g){$('status').textContent='Elige un modo para empezar';$('players').textContent='';$('score').textContent='';$('again').disabled=true;return}const xn=g.x?.name||'Jugador X',on=g.o?.name||'Esperando rival';$('players').textContent=`❌ ${xn}   ·   ⭕ ${on}`;$('score').textContent=`Victorias: ${g.scores?.X||0} - ${g.scores?.O||0} · Empates: ${g.scores?.draw||0}`;const res=g.result||winner(b);$('status').textContent=!g.o?'Esperando a que entre otro jugador…':res==='draw'?'🤝 ¡Empate!':res?`🏆 ¡Ganó ${res==='X'?xn:on}!`:`Turno de ${g.turn==='X'?xn:on} (${g.turn})`;$('again').disabled=mode==='online'?!g.o||!(g.x?.uid===uid||g.o?.uid===uid):false}
+function leave(){if(unsubscribe){unsubscribe();unsubscribe=null}roomRef=null;roomId=null;mode=null;game=null;localGame=null;$('roomInfo').classList.add('hidden');render()}
+$('leave').onclick=leave;$('local').onclick=()=>{leave();mode='local';localGame=newState({name:myName()},{name:'Jugador O'});render()};
+async function ensureAuth(){if(uid)return uid;await signInAnonymously(auth);return new Promise((resolve,reject)=>{const stop=onAuthStateChanged(auth,u=>{if(u){stop();uid=u.uid;resolve(uid)}},reject)})}
+function subscribe(id){if(unsubscribe)unsubscribe();roomId=id;roomRef=ref(db,'rooms/'+id);mode='online';$('roomInfo').classList.remove('hidden');$('roomText').textContent='Sala: '+id;$('invite').value=location.origin+location.pathname+'?sala='+encodeURIComponent(id);unsubscribe=onValue(roomRef,s=>{game=s.val();if(!game){$('status').textContent='La sala ya no existe';return}render()},e=>{$('status').textContent='Error de acceso: '+e.message})}
+$('create').onclick=async()=>{try{await ensureAuth();leave();const id=Math.random().toString(36).slice(2,8).toUpperCase();await set(ref(db,'rooms/'+id),newState({uid,name:myName()},null));subscribe(id)}catch(e){alert('No se pudo crear la sala: '+e.message)}};
+async function join(id){try{await ensureAuth();id=id.trim().toUpperCase();if(!/^[A-Z0-9]{6}$/.test(id)){alert('Introduce un código de 6 caracteres');return}const r=ref(db,'rooms/'+id),snap=await get(r);if(!snap.exists()){alert('No existe esa sala');return}const result=await runTransaction(r,g=>{if(!g)return;if(g.x?.uid===uid||g.o?.uid===uid)return g;if(g.o)return;g.o={uid,name:myName()};return g});if(!result.committed){alert('La sala está llena o ya no existe');return}leave();subscribe(id)}catch(e){alert('No se pudo entrar: '+e.message)}}
+$('join').onclick=()=>join($('roomInput').value);$('share').onclick=async()=>{const url=$('invite').value;try{if(navigator.share)await navigator.share({title:'Tres en Raya Familiar',text:'¡Juega conmigo!',url});else{await navigator.clipboard.writeText(url);alert('Enlace copiado')}}catch{}};
+async function move(i){const g=mode==='local'?localGame:game;if(!g||g.board[i]||g.result||!g.o)return;if(mode==='local'){g.board[i]=g.turn;const res=winner(g.board);if(res){g.result=res;g.scores[res==='draw'?'draw':res]++}else g.turn=g.turn==='X'?'O':'X';render();return}if(!uid||!roomRef)return;try{await runTransaction(roomRef,r=>{if(!r||!r.o||r.result||r.board[i])return;const symbol=r.x?.uid===uid?'X':r.o?.uid===uid?'O':null;if(!symbol||r.turn!==symbol)return;r.board[i]=symbol;const res=winner(r.board);if(res){r.result=res;r.scores??={X:0,O:0,draw:0};r.scores[res==='draw'?'draw':res]=(r.scores[res==='draw'?'draw':res]||0)+1}else r.turn=symbol==='X'?'O':'X';return r})}catch(e){alert(e.message)}}
+$('again').onclick=async()=>{if(mode==='local'){const s=localGame.scores;localGame=newState(localGame.x,localGame.o);localGame.scores=s;render();return}if(roomRef)try{await runTransaction(roomRef,r=>{if(!r||!r.o||![r.x?.uid,r.o?.uid].includes(uid))return;r.board=Array(9).fill('');r.result='';r.turn='X';r.round=(r.round||1)+1;return r})}catch(e){alert(e.message)}};
+onAuthStateChanged(auth,u=>{uid=u?.uid||null;$('connection').textContent=u?'Firebase conectado':'Inicia una partida para conectarte'});render();const requested=new URLSearchParams(location.search).get('sala');if(requested){$('roomInput').value=requested.toUpperCase();$('status').textContent='Invitación recibida: pulsa «Unirme a sala»'}
+</script></body></html>
